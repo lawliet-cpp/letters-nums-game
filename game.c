@@ -121,7 +121,7 @@ void lettersGame()
         }
         
     }else{
-        print("player 1 is the winner");
+        printf("player 1 is the winner");
         player1.value ++;
     }
 }
