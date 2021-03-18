@@ -3,6 +3,11 @@
 #include <time.h>
 #include <string.h>
 #include <stdbool.h>
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <unistd.h>
+#endif
 
 FILE *fptr;
 
@@ -20,8 +25,8 @@ int FindWord(char *word, char *file)
     FILE *fp = fopen(file, "r");
     while (fgets(line, sizeof(line), fp) != NULL)
     {
-
-        if (line == word)
+        
+        if (strstr(line,word))
         {
 
             return 1;
@@ -46,28 +51,38 @@ void lettersGame()
 {
     // variables
 
-    char answer1[100];
-    char answer2[100];
+    char answer1[2048];
+    char answer2[2048];
 
-    char array[1024] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-    char letters[11];
+    char array_vowels[2049] = {'a','o','u','i','y','e'};
+    char array_consonants[2048] = {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w'};
+    char vowels[2048];
+    char consonants[2048];
     int i = 0;
     time_t t;
     //current time as seed of random number generator
     srand((unsigned)time(&t));
 
     // while loop to get random letters from the alphabet array
-    while (i <= 9)
+    while (i <= 5)
     {
 
-        letters[i] = array[rand() % 10];
+        vowels[i] = array_vowels[rand() % 5];
+        consonants[i] = array_consonants[rand()%18];
         i++;
+
+
     }
+    
+
+    
 
     // printing the random letters to the players and getting their answers
 
-    printf("%s\n", letters);
+    printf("%s\n", vowels);
+    printf("%s\n",consonants);
     printf("answer of the first player   :      ");
+    
     scanf("%s", answer1);
     char *c = answer1;
     char *j = answer2;
@@ -80,7 +95,7 @@ void lettersGame()
     if (!(boolean == 1))
     {
         printf("the word does not exist \n");
-        exit(1);
+        
     }
     if (!(boolean2 == 1))
     {
@@ -88,16 +103,22 @@ void lettersGame()
     }
 
     //checking if the  answer only contains letters  from the random alphabets generated
-    if (!strchr(letters, (*c)))
+    if (!strchr(consonants, (*c)) && !strchr(vowels,(*c)))
     {
-        printf("player 1 has cheated \n");
+        printf(" player 1 the letters of the word are not the allowed ones \n");
+        sleep(1);
     }
     //checking if the  answer only contains letters  from the random alphabets generated
 
-    if (!strchr(letters, (*j)))
+    if (!strchr(consonants, (*j)) && !strchr(vowels,(*j)))
     {
-        printf("player 2 has cheated \n");
+        printf("player 2 the letters of the word are not the allowed ones \n");
+        sleep(1);
     }
+    
+    //checking if the  answer only contains letters  from the random alphabets generated
+
+    
 
     //checking the longest word among the answers
     if (boolean == 1)
@@ -106,11 +127,10 @@ void lettersGame()
         {
             printf("player 1 is the winner \n");
             player1.value++;
+            sleep(1);
         }
-    }else{
-        printf("player 2 is the winner");
-        player2.value++;
     }
+    
 
     if (boolean2 == 1)
     {
@@ -118,12 +138,13 @@ void lettersGame()
         {
             printf("player 2 is the winner \n");
             player2.value++;
+            sleep(1);
         }
-        
-    }else{
-        printf("player 1 is the winner");
-        player1.value ++;
     }
+    printf("%s","End of the letters Round \n");
+    printf("%s","------------------------------------- \n");
+
+    sleep(1);
 }
 
 void numbersGame()
@@ -141,6 +162,8 @@ void numbersGame()
     int v = generate_random_number(lower, upper, count);
     // printing the users and getting their answers
     printf(("(%d + %d) X %d  \n"), x, y, z);
+    sleep(1);
+
     int val = (x + y) * z;
     printf("first player answer \n");
     scanf("%d", &answer1);
@@ -152,13 +175,21 @@ void numbersGame()
 
         player1.value++;
         printf("player 1 answer is correct \n");
+        sleep(1);
+
     }
     if (answer2 == val)
     {
 
         player2.value++;
         printf("player 2 answer is correct \n");
+        sleep(1);
+
     }
+
+    
+    sleep(1);
+
 }
 
 int main()
@@ -183,32 +214,75 @@ int main()
 
     player2.name = name2;
     printf("Select the game mode \n \n");
-
-    printf("1 Simple 10 round \n \n ");
-
+    sleep(1);
+    
+    printf("1 Simple 10 round \n \n");
+    sleep(1);
+    
     printf("2 Medium 20 round \n \n");
+    sleep(1);
+    
+    printf("3 Hard 40 round \n \n");
+    sleep(1);
 
-    printf("3 Hard 40 round \n \n ");
 
     printf("Enter the number of the mode you want to play     :  ");
-    printf("\u263A\n");
+    
     scanf("%d", &mode_number);
 
-    if (mode_number == 1)
-    {
-        printf("game started in simple mode \n");
-        int i = 0;
-        while (i < 15)
-        {
-            lettersGame();
-            numbersGame();
-            i++;
-        }
+    sleep(1);
 
-        if (player1.value > player2.value)
-        {
-            printf("player 1 is the winner");
-        }
+    int i = 0;
+    int rounds;
+    if(mode_number == 1){
+        rounds = 10;
+        printf("game started in simple mode \n");
+        sleep(1);
+
+    }
+    if(mode_number == 2){
+        rounds = 20;
+        printf("game started in medium mode \n");
+        sleep(1);
+
+
+    }
+    if(mode_number == 3){
+        rounds = 40;
+        printf("game started in hard mode \n");
+        sleep(1);
+
+
+    }
+    if(mode_number != 1 && mode_number != 2 && mode_number !=3){
+        printf(" please restart the program and select one of the modes \n");
+        sleep(1);
+        exit(1);
+    }
+
+    while (i <= rounds)
+    {
+        lettersGame();
+        numbersGame();
+        i++;
+        printf("end of the round number %d \n",i);
+        printf("%s","------------------------------------- \n");
+
+        sleep(3);
+
+    }
+
+    if (player1.value > player2.value)
+    {
+        printf("player 1 is the winner");
+    }
+    if (player2.value > player1.value)
+    {
+        printf("player 2 is the winner");
+    }
+    if (player1.value == player2.value)
+    {
+        printf("the points of the two players are equal");
     }
 
     return 0;
