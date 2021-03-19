@@ -260,29 +260,29 @@ int main()
         exit(1);
     }
 
-    while (i <= rounds)
+    while (i < rounds)
     {
         lettersGame();
         numbersGame();
         i++;
         printf("end of the round number %d \n",i);
         printf("%s","------------------------------------- \n");
-
+        
         sleep(3);
 
     }
 
     if (player1.value > player2.value)
     {
-        printf("player 1 is the winner");
+        printf("player 1 is the winner with the value of %d",player1.value);
     }
     if (player2.value > player1.value)
     {
-        printf("player 2 is the winner");
+        printf("player 2 is the winner with the value of %d",player2.value);
     }
     if (player1.value == player2.value)
     {
-        printf("the points of the two players are equal");
+        printf("the points of the two players are equal with the value of %d",player1.value);
     }
 
     return 0;
